@@ -25,8 +25,10 @@
 function updateDB(event) {
   // Prevent default refresh
   // Create data object
+  // console.log the object
   // GET *PUSH* PUT DELETE
   // Write to our database
+  // Reset message
 }
 
 /**
@@ -46,7 +48,13 @@ function updateDB(event) {
  *
  */
 
-function addMessageToBoard(rowData) {}
+function addMessageToBoard(rowData) {
+  // Store the value of rowData inside object named 'data'
+  // console.log data
+  // Create a variable named singleMessage
+  // that stores function call for makeSingleMessageHTML()
+  // Append the new message HTML element to allMessages
+}
 
 /**
  * @TODO create a function called makeSingleMessageHTML which takes
