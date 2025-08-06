@@ -2,16 +2,25 @@
 const database = firebase.database().ref();
 
 //Get DOM elements
-const allMessages = document.getElementById('all-messages')
+const allMessages = document.getElementById('all-messages');
 const usernameElem = document.getElementById('username');
 const messageElem = document.getElementById('message');
 const emailElem = document.getElementById('email');
 const sendBtn = document.getElementById('send-btn');
+const resetBtn = document.getElementById('reset-btn'); // Add this line
 
 
 
 //Set send button click handler 
 sendBtn.onclick = updateDB;
+
+//Set reset button click handler
+resetBtn.onclick = function() {
+  // Remove all messages from Firebase
+  database.remove();
+  // Clear messages from UI
+  allMessages.innerHTML = '';
+};
 
 //Update Database with new essage 
 function updateDB(event) {
