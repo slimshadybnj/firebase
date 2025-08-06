@@ -1,86 +1,84 @@
-/**
- * @TODO get a reference to the Firebase Database object
- */
+//Initialize Firebase database reference 
+const database = firebase.database().ref();
 
-/**
- * @TODO get const references to the following elements:
- *      - div with id #all-messages
- *      - input with id #username
- *      - input with id #message
- *      - button with id #send-btn and the updateDB
- *        function as an onclick event handler
- */
+//Get DOM elements
+const allMessages = document.getElementById('all-messages')
+const usernameElem = document.getElementById('username');
+const messageElem = document.getElementById('message');
+const emailElem = document.getElementById('email');
+const sendBtn = document.getElementById('send-btn');
 
-/**
- * @TODO create a function called updateDB which takes
- * one parameter, the event, that:
- *      - gets the values of the input elements and stores
- *        the data in a temporary object with the keys USERNAME
- *        and MESSAGE
- *      - console.logs the object above
- *      - writes this object to the database
- *      - resets the value of #message input element
- */
 
+
+//Set send button click handler 
+sendBtn.onclick = updateDB;
+
+//Update Database with new essage 
 function updateDB(event) {
   // Prevent default refresh
+  event.preventDefault();
+  //Get Current date and time 
+  const now = new Date ();
+  const formattedDate = `${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}/${String(now.getFullYear()).slice(-2)}`;
+  const formattedTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
   // Create data object
+  const data = {
+    USERNAME: usernameElem.value,
+    EMAIL: emailElem.value,
+    MESSAGE: messageElem.value,
+    DATE: formattedDate,
+    TIME: formattedTime 
+  };
   // console.log the object
+  console.log(data);
   // GET *PUSH* PUT DELETE
+  database.push(data);
   // Write to our database
   // Reset message
+  messageElem.value = '';
 }
 
-/**
- * @TODO add the addMessageToBoard function as an event
- * handler for the "child_added" event on the database
- * object
- */
-
-/**
- * @TODO create a function called addMessageToBoard that
- * takes one parameter rowData which:
- *      - console.logs the data within rowData
- *      - creates a new HTML element for a single message
- *        containing the appropriate data
- *      - appends this HTML to the div with id
- *        #all-messages (we should have a reference already!)
- *
- */
-
+//Add the addMessageToBoard function as an event
+ database.on('child_added', addMessageToBoard);
+ 
 function addMessageToBoard(rowData) {
   // Store the value of rowData inside object named 'data'
+  const data = rowData.val();
   // console.log data
+  console.log(data);
   // Create a variable named singleMessage
   // that stores function call for makeSingleMessageHTML()
+  let singleMessage = makeSingleMessageHTML(data.USERNAME, data.EMAIL, data.MESSAGE, data.DATE, data.TIME);
   // Append the new message HTML element to allMessages
+  allMessages.append(singleMessage);
 }
 
-/**
- * @TODO create a function called makeSingleMessageHTML which takes
- * two parameters, usernameTxt and messageTxt, that:
- *      - creates a parent div with the class .single-message
- *
- *      - creates a p tag with the class .single-message-username
- *      - update the innerHTML of this p to be the username
- *        provided in the parameter object
- *      - appends this p tag to the parent div
- *
- *      - creates a p tag
- *      - updates the innerHTML of this p to be the message
- *        text provided in the parameter object
- *      - appends this p tag to the parent div
- *
- *      - returns the parent div
- */
 
-function makeSingleMessageHTML(usernameTxt, messageTxt) {
+function makeSingleMessageHTML(usernameTxt, emailTxt, messageTxt, dateTxt, timeTxt) {
   // Create Parent Div
+  let parentDiv = document.createElement('div');
   // Add Class name .single-message
+  parentDiv.className = 'single-message';
   // Create Username P Tag
+  let usernameP = document.createElement('p');
+  usernameP.className = 'single-message-username';
+  usernameP.innerHTML = usernameTxt + ':';
   // Append username
+  parentDiv.append(usernameP);
+  //Create Email P Tag 
+  let emailP = document.createElement('p');
+  emailP.innerHTML = emailTxt;
+  parentDiv.append(emailP);
   // Create message P Tag
+  let messageP = document.createElement('p');
+  messageP.innerHTML = messageTxt;
+  parentDiv.append(messageP);
+  // Adding the date and time 
+  let dateTimeP = document.createElement('p');
+  dateTimeP.innerHTML = `${dateTxt} ${timeTxt}`
+  parentDiv.append(dateTimeP);
   // Return Parent Div
+  return parentDiv;
 }
 
 /**
